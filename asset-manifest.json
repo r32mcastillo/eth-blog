@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/eth-blog/static/css/main.abd64e84.css",
+    "main.js": "/eth-blog/static/js/main.463c385e.js",
+    "index.html": "/eth-blog/index.html",
+    "main.abd64e84.css.map": "/eth-blog/static/css/main.abd64e84.css.map",
+    "main.463c385e.js.map": "/eth-blog/static/js/main.463c385e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.abd64e84.css",
+    "static/js/main.463c385e.js"
+  ]
+}
