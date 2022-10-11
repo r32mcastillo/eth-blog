@@ -296,6 +296,8 @@ function App() {
                     <h3>
                         Conecta con tu metamask a la tesnet de Goerli y deja algunos mensajes =)
                     </h3>
+                    <img className='imgdemo' src='https://raw.githubusercontent.com/r32mcastillo/eth-blog/master/web/src/demo.png' />
+
                     </div>
                 </section>
                 :

@@ -207,3 +207,8 @@ header {
     font-size: 25px;
     cursor: pointer;
 }
+.imgdemo{
+    width: 60%;
+    border: solid;
+    border-radius: 10%;
+}
