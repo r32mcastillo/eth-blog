@@ -26,10 +26,14 @@ function App() {
     const [user, setUser] = useState(account);
     const [newMessage, setNewMessage] = useState("");
     const [nickName, setNickName] = useState("");
+    const [isRegister, setIsRegister] = useState(false);
     
 
     const connect = useCallback(
         (e) => {
+            console.log('====================================');
+            console.log("casa");
+            console.log('====================================');
             e?.preventDefault();
             activate(connector);
             localStorage.setItem("previouslyConnected", "true");
@@ -78,6 +82,8 @@ function App() {
                 console.log('====================================');
                 setUsers(u);
                 setNickName(getAutor(account));
+                setIsRegister(false);
+                if(u.find((e) => e.owner == account) )setIsRegister(true);
             }
         }, [contract, account]
     )
@@ -216,13 +222,16 @@ function App() {
         () => {
             if (localStorage.getItem("previouslyConnected") === "true") {
                 connect();
-                getAllItems();
-                getAllUsers();
-                getItemsByAddress(user);
             }
         }, [connect]
     );
 
+    useEffect(
+        () => {
+            getAllItems();
+            getAllUsers();
+        }, [connect,library?.eth,account,active, chainId, library?.eth?.Contract]
+    );
     const handleChangeMessage = (event) => {
         setNewMessage(event.target.value);
     }
@@ -247,7 +256,8 @@ function App() {
         }
     }
     const getAutor = (address) => {
-        return users.find((e) => e.owner == address)?.name;
+        let  _ = users.find((e) => e.owner == address);
+        return _ ? _.name:"";
     }
     const addLike = (id) => {
         addLikeContract(id)
@@ -315,6 +325,7 @@ function App() {
                         </ul>
                     </div>
                     <div className="messages">
+                        {isRegister&&
                         <form onSubmit={changeName}>
                             <label>
                                 Cambiar Nombre de Usuario:
@@ -322,6 +333,7 @@ function App() {
                             </label>
                             <input type="submit" value="Enviar" />
                         </form>
+                        }
                             <br/>
                         <form onSubmit={sendMessage}>
                             <label>
