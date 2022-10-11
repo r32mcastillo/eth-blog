@@ -294,7 +294,7 @@ function App() {
                     <div>
                     <h1>Blog</h1>
                     <h3>
-                        Conecta con tu metamask y deja algunos mensajes =)
+                        Conecta con tu metamask a la tesnet de Goerli y deja algunos mensajes =)
                     </h3>
                     </div>
                 </section>
