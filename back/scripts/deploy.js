@@ -1,30 +1,54 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
+
 const hre = require("hardhat");
+const fs = require("fs");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = hre.ethers.utils.parseEther("1");
-
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
+  const chainId = hre.network.config.chainId;
+  //const chainId = 31337; // 31337 = localhost hardhat
+  const networkName = hre.network.name
+  const Lock = await hre.ethers.getContractFactory("Blog");
+  const lock = await Lock.deploy();
   await lock.deployed();
 
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+ 
+  console.log("networkName: ", networkName);
+  console.log("chainId: ", chainId);
+  console.log(`Deployed to ${lock.address}`);
+
+  //let data = JSON.stringify(config);
+  let raddress = {};
+  await fs.readFile('../web/src/config/artifacts/smartContratArtifact.js', 'utf8', function (err, data) {
+    try {
+      raddress = JSON.parse(data.split("export")[1].split("=")[1].split(";")[0]  );
+      raddress[chainId]=lock.address;
+    } catch (error) {
+      address = `{"${chainId}":"${lock.address}"}`;
+    }
+  });
+  await fs.readFile('./artifacts/contracts/Blog.sol/Blog.json', 'utf8', function (err, data) {
+    const obj = JSON.parse(data);
+    let config = `
+    export const address = ${JSON.stringify(raddress)};
+    export const abi = ${JSON.stringify(  obj.abi)};
+    `;
+    let output = JSON.stringify(config);
+    fs.writeFileSync("../web/src/config/artifacts/smartContratArtifact.js", JSON.parse(output));
+
+    //console.log(config);
+  });
+
+  /*
+  fs.copyFile(
+    "./artifacts/contracts/Blog.sol/Blog.json",
+    "../web/config/artifacts/Blog.json",
+    (err) => {
+      if (err) {
+        console.log("Error Occurred:", err);
+      }
+    }
+  );//*/
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
